@@ -1,0 +1,58 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Зоо-Месягутово — справочник по ветеринарии, Харитонов Матвей Васильевич",
+    "identifier": "zoo-rus.ru"
+  },
+  "entries": [
+    {
+      "identifier": "urn:ai:zoo-rus.ru:knowledge:llms-txt",
+      "displayName": "Индекс сайта для нейросетей (llms.txt)",
+      "type": "text/plain",
+      "url": "https://zoo-rus.ru/llms.txt",
+      "description": "Краткое описание сайта, оговорки и список ключевых страниц."
+    },
+    {
+      "identifier": "urn:ai:zoo-rus.ru:knowledge:sitemap",
+      "displayName": "Карта сайта (sitemap.xml)",
+      "type": "application/xml",
+      "url": "https://zoo-rus.ru/sitemap.xml",
+      "description": "Все страницы сайта с датами обновления. Страницы статические, на русском языке."
+    },
+    {
+      "identifier": "urn:ai:zoo-rus.ru:knowledge:search-index",
+      "displayName": "Поисковый индекс страниц сайта",
+      "type": "application/json",
+      "url": "https://zoo-rus.ru/search-index.json",
+      "description": "Заголовки, краткие описания и ссылки на страницы сайта."
+    },
+    {
+      "identifier": "urn:ai:zoo-rus.ru:knowledge:organizations",
+      "displayName": "Организации Месягутово: контакты и график",
+      "type": "text/html",
+      "url": "https://zoo-rus.ru/organizacii/",
+      "description": "Ветстанция с государственной лабораторией и ветаптека АраВет. Справочная информация, сайт неофициальный."
+    },
+    {
+      "identifier": "urn:ai:zoo-rus.ru:knowledge:neighbors",
+      "displayName": "Ветслужбы соседних районов и Уфы",
+      "type": "text/html",
+      "url": "https://zoo-rus.ru/sosednie-rayony/",
+      "description": "Малояз, Большеустьикинское, Верхние Киги, Сатка; крупные клиники Уфы на странице /krupnye-kliniki-rb/."
+    },
+    {
+      "identifier": "urn:ai:zoo-rus.ru:knowledge:services-planned",
+      "displayName": "Планируемые услуги",
+      "type": "text/html",
+      "url": "https://zoo-rus.ru/uslugi/",
+      "description": "УЗИ, рентген и собственная лаборатория: анонсы, услуги пока не оказываются."
+    },
+    {
+      "identifier": "urn:ai:zoo-rus.ru:knowledge:legal",
+      "displayName": "Контакты и политика конфиденциальности",
+      "type": "text/html",
+      "url": "https://zoo-rus.ru/kontakty/",
+      "description": "Контакты владельца проекта и политика обработки данных. Форм с вводом данных на сайте нет."
+    }
+  ]
+}

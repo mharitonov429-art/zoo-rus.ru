@@ -1,0 +1,14 @@
+{
+  "name": "zoo-meshyagutovo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Зоо-Месягутово: справочник по ветеринарии (статический сайт, без зависимостей)",
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "node build.mjs",
+    "rotate": "node build.mjs --rotate",
+    "check": "node scripts/check.mjs",
+    "dev": "node build.mjs && node scripts/serve.mjs"
+  }
+}
