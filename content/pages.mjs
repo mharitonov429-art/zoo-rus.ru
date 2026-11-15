@@ -53,7 +53,7 @@ export default function buildPages({ site, orgs, neighbors, big, products, poult
 </ul>
 
 <h2>Рядом с Месягутово</h2>
-<p>Если нужна помощь за пределами района: ветстанции и зоомагазины <a href="/sosednie-rayony/">в Малоязе, Большеустьикинском, Верхних Кигах и Сатке</a> (до Сатки ${esc(site.distances.satka)}), а также <a href="/krupnye-kliniki-rb/">крупные клиники Уфы</a> (${esc(site.distances.ufa)}). Расстояния указаны по данным владельца сайта.</p>
+<p>Если нужна помощь за пределами района: ветстанции и зоомагазины <a href="/sosednie-rayony/">в Малоязе, Салавате, Большеустьикинском, Новобелокатае, Верхних Кигах и Сатке</a> (до Сатки ${esc(site.distances.satka)}), а также <a href="/krupnye-kliniki-rb/">крупные клиники Уфы</a> (${esc(site.distances.ufa)}). Расстояния указаны по данным владельца сайта.</p>
 `,
   });
 
@@ -453,24 +453,28 @@ ${notice('Страница информационная и не является
 
   // ---------- Соседние районы ----------
   const phones = (arr) => arr.map((p) => phoneLink(p)).join(', ');
-  const vetRow = (v) => `<tr><td><strong>${esc(v.name)}</strong>${v.note ? `<br><span class="small">${esc(v.note)}</span>` : ''}</td><td>${esc(v.address)}</td><td>${v.phones.length ? phones(v.phones) : 'уточняйте'}</td><td>${esc(v.schedule || 'уточняйте')}</td></tr>`;
+  const nverified = fmtDate(site.neighborsVerified);
+  const vetRow = (v) => `<tr><td><strong>${esc(v.name)}</strong>${v.kind ? `<br><span class="small">${esc(v.kind)}</span>` : ''}${v.note ? `<br><span class="small">${esc(v.note)}</span>` : ''}</td><td>${esc(v.address)}</td><td>${v.phones.length ? phones(v.phones) : 'уточняйте'}</td><td>${esc(v.schedule || 'уточняйте')}</td></tr>`;
+  const shopLi = (s) => `<li><strong>${esc(s.name)}</strong>${s.kind ? ` (${esc(s.kind)})` : ''}: ${esc(s.address)}${s.phones && s.phones.length ? `; тел. ${phones(s.phones)}` : ''}${s.schedule ? `; ${esc(s.schedule)}` : ''}</li>`;
   const districtBlock = (d) => `
 <section id="${d.id}">
 <h2>${esc(d.title)} (${esc(d.district)})</h2>
 ${d.distance ? `<p class="small">От Месягутово: ${esc(d.distance)} (по данным владельца сайта).</p>` : ''}
 <div class="scroll"><table class="sched wide"><thead><tr><th>Ветеринарная служба</th><th>Адрес</th><th>Телефон</th><th>График</th></tr></thead><tbody>${d.vets.map(vetRow).join('')}</tbody></table></div>
-${d.shops.length ? `<h3>Зоомагазины</h3><ul class="plain">${d.shops.map((s) => `<li>${esc(s.name)}: ${esc(s.address)}</li>`).join('')}</ul>` : ''}
-<p class="small">${esc(d.pending)}</p>
+${d.shops.length ? `<h3>Зоомагазины и аптеки</h3><ul class="plain">${d.shops.map(shopLi).join('')}</ul>` : ''}
+${d.pending ? `<p class="small">${esc(d.pending)}</p>` : ''}
+${d.sources && d.sources.length ? `<p class="small">Источники: ${d.sources.map((s) => `<a href="${esc(s.url)}" rel="nofollow noopener">${esc(s.name)}</a>`).join(', ')}.</p>` : ''}
 </section>`;
 
   P.push({
     url: '/sosednie-rayony/', kind: 'hub', section: 'Рядом с Месягутово',
-    title: 'Ветклиники соседних районов: Малояз, Киги, Сатка',
-    description: 'Ветстанции и зоомагазины рядом с Месягутово: Малояз, Большеустьикинское, Верхние Киги и Сатка. Адреса, телефоны, график.',
-    h1: 'Ветеринарные станции и зоомагазины в соседних районах',
-    answer: `Рядом с Месягутово работают районные ветстанции в Малоязе, Большеустьикинском и Верхних Кигах, а в Сатке (${esc(site.distances.satka)}) есть частная ветклиника и зоомагазины. Данные взяты из открытых источников и проверены ${verified}. График уточняйте по телефону.`,
+    updated: site.neighborsUpdated,
+    title: 'Ветклиники рядом с Месягутово: Малояз, Салават, Сатка',
+    description: 'Ветстанции, клиники, ветаптеки и зоомагазины рядом с Месягутово: Малояз, Салават, Большеустьикинское, Новобелокатай, Верхние Киги, Сатка.',
+    h1: 'Ветеринарные станции, клиники и зоомагазины в соседних районах',
+    answer: `Рядом с Месягутово работают районные ветстанции в Малоязе, Новобелокатае и Верхних Кигах, а частные клиники и аптеки есть в Салавате, Большеустьикинском и Сатке (${esc(site.distances.satka)}). Данные из открытых источников на ${nverified}. График и телефоны уточняйте по телефону.`,
     body: `${neighbors.map(districtBlock).join('\n')}
-${notice('Справочник, а не рейтинг: мы не оцениваем качество работы организаций. Часть данных различается в разных источниках, поэтому звоните заранее.', 'warn')}
+${notice('Справочник, а не рейтинг: мы не оцениваем качество работы организаций. Часть данных взята из справочников и различается в разных источниках, режим «круглосуточно» и график могут измениться, поэтому звоните заранее.', 'warn')}
 <p>Если нужна сложная диагностика или ночная помощь, смотрите <a href="/krupnye-kliniki-rb/">крупные клиники Уфы</a>. Исправить данные: ${esc(o.email)}.</p>
 `,
   });
