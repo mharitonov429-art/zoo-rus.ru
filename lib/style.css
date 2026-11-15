@@ -57,6 +57,8 @@ footer .wrap{display:grid;gap:.75rem}
 footer nav{display:flex;flex-wrap:wrap;gap:.25rem 1.1rem}
 .cookie{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--bg);padding:.75rem 1rem;display:flex;gap:1rem;align-items:center;justify-content:center;flex-wrap:wrap;font-size:.9rem;z-index:20}
 .cookie[hidden]{display:none}
+.cookie p{margin:0;max-width:42rem}
+.cookie div{display:flex;gap:.5rem}
 .cookie a{color:inherit}
 .cookie button{min-height:44px;padding:.4rem 1rem;font:inherit;border:2px solid currentColor;background:transparent;color:inherit;border-radius:var(--r);cursor:pointer}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}

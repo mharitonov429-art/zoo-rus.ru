@@ -21,7 +21,10 @@ for (const f of htmls) {
   const h1 = (html.match(/<h1[\s>]/g) || []).length;
   if (h1 !== 1) errors.push(`${rel}: H1 = ${h1}`);
   if (!/<link rel="canonical" href="https:\/\/zoo-rus\.ru[^"]*">/.test(html)) errors.push(`${rel}: нет canonical`);
-  if (!html.includes('mc.yandex.ru/metrika/tag.js?id=114168885')) errors.push(`${rel}: нет счётчика Метрики`);
+  if (!html.includes('mc.yandex.ru/metrika/tag.js?id=114168885')) errors.push(`${rel}: нет кода Метрики`);
+  if (!html.includes("localStorage.getItem('zoo_consent_analytics')") || !/if \(v === 'yes'\) zooLoadMetrika\(\)/.test(html)) errors.push(`${rel}: Метрика не привязана к согласию`);
+  if (/<noscript>[\s\S]*mc\.yandex\.ru\/watch/.test(html)) errors.push(`${rel}: пиксель Метрики в noscript работает без согласия`);
+  if (!html.includes('id="zoo-consent-yes"') || !html.includes('id="zoo-cookie-settings"')) errors.push(`${rel}: нет баннера согласия или ссылки «Настройки cookie»`);
   if (!html.includes('<html lang="ru">')) errors.push(`${rel}: нет lang="ru"`);
   for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
     try { JSON.parse(m[1]); } catch (e) { errors.push(`${rel}: JSON-LD не разбирается`); }
@@ -30,14 +33,21 @@ for (const f of htmls) {
   if (/\[ЗАПОЛНИТЬ\]/.test(html) && !/noindex/.test(html)) errors.push(`${rel}: заглушка [ЗАПОЛНИТЬ] на индексируемой странице`);
 }
 
-for (const need of ['sitemap.xml', 'robots.txt', 'llms.txt', 'ai-catalog.json', 'webmcp.js', 'search-index.json', 'CNAME', '404.html', 'googled005414cfdf84903.html', 'yandex_82c6400a99edc483.html']) {
+for (const need of ['sitemap.xml', 'robots.txt', 'llms.txt', 'ai-guide.txt', 'ai-catalog.json', 'webmcp.js', 'CNAME', '404.html', 'googled005414cfdf84903.html', 'yandex_82c6400a99edc483.html']) {
   if (!fs.existsSync(path.join(DIST, need))) errors.push(`нет файла ${need}`);
 }
 for (const j of files.filter((f) => f.endsWith('.json'))) {
   try { JSON.parse(fs.readFileSync(j, 'utf8')); } catch (e) { errors.push(`${path.relative(DIST, j)}: некорректный JSON`); }
 }
 const mcp = fs.readFileSync(path.join(DIST, 'webmcp.js'), 'utf8');
-if (mcp.includes('/*CONTACTS*/')) errors.push('webmcp.js: не подставлены контакты');
+for (const m of ['/*CONTACTS*/', '/*CATEGORIES*/', '/*TYPES*/']) if (mcp.includes(m)) errors.push(`webmcp.js: не подставлено ${m}`);
+// каталог для ИИ: все адреса существуют, инструменты WebMCP объявлены в каталоге
+const cat = JSON.parse(fs.readFileSync(path.join(DIST, 'ai-catalog.json'), 'utf8'));
+for (const c of cat.categories) for (const a of c.articles) if (!exists(new URL(a.url).pathname)) errors.push(`ai-catalog.json: нет страницы ${a.url}`);
+for (const t of cat.availableTools) if (!mcp.includes(`name: '${t.name}'`)) errors.push(`webmcp.js: нет инструмента ${t.name}`);
+for (const f of ['llms.txt', 'ai-guide.txt']) {
+  for (const m of fs.readFileSync(path.join(DIST, f), 'utf8').matchAll(/\]\(https:\/\/zoo-rus\.ru([^)]*)\)/g)) if (!exists(m[1])) errors.push(`${f}: нет страницы ${m[1]}`);
+}
 
 // все страницы из sitemap должны существовать
 for (const sm of files.filter((f) => /sitemap-.*\.xml$/.test(f))) {
